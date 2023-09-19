@@ -1,9 +1,9 @@
 import  { useEffect, useState } from "react";
-import server from "../api/axios";
+import {server as axios} from "../api/axios";
 
 
 const Users = () => {
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -12,8 +12,8 @@ const Users = () => {
 
     const getUsers = async() => {
       try {
-        const response = await server.get('/users', {
-          // this will help to cancel the signal whenwe want. 
+        const response = await axios.get("/users", {
+          // this will help to cancel the signal whenwe want.
           signal: controller.signal(),
         });
         isMounted && setUsers(response.data);
@@ -23,6 +23,7 @@ const Users = () => {
     };
 
     getUsers();
+    // cleanup to abort any pending request when the component unmount
     return () => {
       isMounted = false;
       controller.abort();
